@@ -13,7 +13,7 @@ namespace InventoryApp
     public partial class ModProd : Form
     {
         private Product productSelected = GlobalInv.inventory.LookupProduct(InventoryHome.productID);
-        private bool isInvInt, isMinInt, isMaxInt, isPriceDec, isMaxGreater;
+        private bool isInvInt, isMinInt, isMaxInt, isPriceDec;
         private string searchWRD;
         private int partID, selPartID;
         private BindingSource bindingSource = new BindingSource();
@@ -39,6 +39,7 @@ namespace InventoryApp
 
         private void Min_TextChanged(object sender, EventArgs e)
         {
+            Min.BackColor = Color.White;
             if(int.TryParse(Min.Text, out int result))
             {
                 isMinInt = true;
@@ -57,6 +58,7 @@ namespace InventoryApp
 
         private void ProdName_TextChanged(object sender, EventArgs e)
         {
+            ProdName.BackColor = Color.White;
             productSelected.Name = ProdName.Text;
         }
 
@@ -70,6 +72,7 @@ namespace InventoryApp
 
         private void Inventory_TextChanged(object sender, EventArgs e)
         {
+            Inventory.BackColor = Color.White;
             if(int.TryParse(Inventory.Text, out int result))
             {
                 isInvInt = true;
@@ -85,6 +88,7 @@ namespace InventoryApp
 
         private void Price_TextChanged(object sender, EventArgs e)
         {
+            Price.BackColor = Color.White;
             if(decimal.TryParse(Price.Text, out decimal result))
             {
                 isPriceDec = true;
@@ -108,6 +112,7 @@ namespace InventoryApp
 
         private void Max_TextChanged(object sender, EventArgs e)
         {
+            Max.BackColor = Color.White;
             if(int.TryParse(Max.Text, out int result))
             {
                 isMaxInt = true;
@@ -172,8 +177,57 @@ namespace InventoryApp
 
         private void Save_Click(object sender, EventArgs e)
         {
-            GlobalInv.inventory.UpdateProduct(InventoryHome.productID, productSelected);
-            this.Close();
+            if (!isInvInt || Inventory == null)
+            {
+                Inventory.BackColor = Color.Red;
+                MessageBox.Show("Inventory must contain a number.", "Invalid Inventory", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            else if (!isMaxInt)
+            {
+                Max.BackColor = Color.Red;
+                MessageBox.Show("Max must contain a number.", "Invalid Max", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            else if (!isMinInt)
+            {
+                Min.BackColor = Color.Red;
+                MessageBox.Show("Min must contain a number.", "Invalid Min", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            else if (!isPriceDec)
+            {
+                Price.BackColor = Color.Red;
+                MessageBox.Show("Price must contain a number with no more than two decimal places.", "Ivalid Price", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            else if (int.Parse(Min.Text) > int.Parse(Max.Text))
+            {
+                Max.BackColor = Color.Red;
+                MessageBox.Show("Max must be higher than Min.", "Max is too small", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            else if (ProdName.Text == null || productSelected.Name == "")
+            {
+                ProdName.BackColor = Color.Red;
+                MessageBox.Show("The product needs a name.", "No Name", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }else if (int.Parse(Inventory.Text) > int.Parse(Max.Text))
+            {
+                Inventory.BackColor = Color.Red;
+                MessageBox.Show("Inventory must not be higher than Max value.", "Inventory exceeded maximum", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }else if(int.Parse(Inventory.Text) < int.Parse(Min.Text))
+            {
+                Inventory.BackColor = Color.Red;
+                MessageBox.Show("Inventory must not be lower than Min value.", "Inventory exceeded minimum", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else
+            {
+                GlobalInv.inventory.UpdateProduct(InventoryHome.productID, productSelected);
+                this.Close();
+            }
         }
     }
 }

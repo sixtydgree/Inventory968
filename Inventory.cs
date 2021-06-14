@@ -36,9 +36,17 @@ namespace InventoryApp
 
         public bool RemoveProduct(int e)
         {
+            
+            if (LookupProduct(e)?.AssociatedParts?.Any() == false)
+            {
+                Products.Remove(LookupProduct(e));
+                return true;
+            }
+            else
+            {
 
-            Products.Remove(LookupProduct(e));
-            return true;
+                return false;
+            }
 
         }
 
@@ -57,7 +65,7 @@ namespace InventoryApp
         {
            
             int index = Products.IndexOf(LookupProduct(e));
-            RemoveProduct(e);
+            Products.Remove(LookupProduct(e));
             Products.Insert(index, product);
         }
 

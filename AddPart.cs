@@ -185,6 +185,16 @@ namespace InventoryApp
                 MessageBox.Show("Price must contain a number value.", "Needs Price", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 P_Price.BackColor = Color.Red;
                 return;
+            }else if(PartInStock > PartMax)
+            {
+                P_Inventory.BackColor = Color.Red;
+                MessageBox.Show("Inventory must not be higher than Max value.", "Inventory max exceeded", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }else if(PartInStock < PartMin)
+            {
+                P_Inventory.BackColor = Color.Red;
+                MessageBox.Show("Inventory must not be lower than Min value.", "Inventory minimum exceeded", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
             else
             {

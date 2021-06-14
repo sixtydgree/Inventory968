@@ -25,23 +25,23 @@ namespace InventoryApp
             //Populate items in both lists to give evaluator something to start with.
             //Parts
             BindingList<Part> parts = new BindingList<Part>();
-            Outsourced outsourced = new Outsourced("Mitch Tooling", GlobalInv.inventory.AllParts.Count, "PVC Plastic", 1.95M, 1200, 10, 100);
+            Outsourced outsourced = new Outsourced("Mitch Tooling", GlobalInv.inventory.AllParts.Count, "PVC Plastic", 1.95M, 1200, 100, 1500);
             GlobalInv.inventory.AddPart(outsourced);
-            Outsourced outsourced2 = new Outsourced("Mitch Tooling", GlobalInv.inventory.AllParts.Count, "PVC Glue", 2.30M, 1025, 5, 200);
+            Outsourced outsourced2 = new Outsourced("Mitch Tooling", GlobalInv.inventory.AllParts.Count, "PVC Glue", 2.30M, 1025, 5, 2000);
             GlobalInv.inventory.AddPart(outsourced2);
-            InHouse inHouse = new InHouse(5166743, GlobalInv.inventory.AllParts.Count, "LED Board", 0.15M, 500, 1, 20);
+            InHouse inHouse = new InHouse(5166743, GlobalInv.inventory.AllParts.Count, "LED Board", 0.15M, 500, 10, 2000);
             GlobalInv.inventory.AddPart(inHouse);
-            InHouse inHouse1 = new InHouse(4261378, GlobalInv.inventory.AllParts.Count, "Monitor Control Circuit", 2.50M, 1000, 1, 250);
+            InHouse inHouse1 = new InHouse(4261378, GlobalInv.inventory.AllParts.Count, "Monitor Control Circuit", 2.50M, 1000, 20, 2500);
             GlobalInv.inventory.AddPart(inHouse1);
             //Products
             parts.Add(GlobalInv.inventory.AllParts[2]);
             parts.Add(GlobalInv.inventory.AllParts[3]);
-            Product product1 = new Product(GlobalInv.inventory.Products.Count, "80\" LCD Television", 1500.00M, 124, 1, 5, parts);
+            Product product1 = new Product(GlobalInv.inventory.Products.Count, "80\" LCD Television", 1500.00M, 124, 5, 300, parts);
             GlobalInv.inventory.AddProduct(product1);
             parts.Clear();
             parts.Add(GlobalInv.inventory.AllParts[0]);
             parts.Add(GlobalInv.inventory.AllParts[1]);
-            Product product2 = new Product(GlobalInv.inventory.Products.Count, "Model Airplane (f_16)", 25.00M, 300, 1, 10, parts);
+            Product product2 = new Product(GlobalInv.inventory.Products.Count, "Model Airplane (f_16)", 25.00M, 300, 5, 1000, parts);
             GlobalInv.inventory.AddProduct(product2);
 
 
@@ -193,18 +193,23 @@ namespace InventoryApp
         {
             if(ProductGrid.SelectedRows.Count > 0)
             {
+                
                 var selectedOption = MessageBox.Show("Are you sure you would like to delete this product?", "Delete Product", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
 
                 if (selectedOption == DialogResult.OK)
                 {
-                    GlobalInv.inventory.RemoveProduct(productID);
                     if (GlobalInv.inventory.RemoveProduct(productID) == false)
                     {
-                        MessageBox.Show("Product not found.", "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Product cannot be deleted while associated with parts.", "Parts still associated with product", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
+                    }
+                    else
+                    {
+                        GlobalInv.inventory.RemoveProduct(productID);
                     }
                 }
                 else { return; }
+
             }
             else
             {

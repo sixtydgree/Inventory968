@@ -235,10 +235,16 @@ namespace InventoryApp
                 ProdName.BackColor = Color.Red;
                 MessageBox.Show("The product needs a name.", "No Name", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
-            }else if(AssociatingParts.Rows.Count == 0)
+            }else if(int.Parse(Inventory.Text) > int.Parse(Max.Text))
             {
-                AssociatingParts.BackgroundColor = Color.Red;
-                MessageBox.Show("Products must have associated parts.", "No parts associated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Inventory.BackColor = Color.Red;
+                MessageBox.Show("Inventory must not be higher than Max value.", "Inventory exceeded maximum", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (int.Parse(Inventory.Text) < int.Parse(Min.Text))
+            {
+                Inventory.BackColor = Color.Red;
+                MessageBox.Show("Inventory must not be lower than Min value.", "Inventory exceeded minimum", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             else
